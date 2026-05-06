@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engineering Calculator | Alec Plehn</title>
+
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --text: #1f2933;
+      --muted: #5f6b7a;
+      --card: #ffffff;
+      --accent: #1f5eff;
+      --border: #d9dee7;
+      --shadow: rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav {
+      max-width: 1050px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      margin-left: 1rem;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    main {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    section {
+      margin-bottom: 4rem;
+    }
+
+    .breadcrumb {
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .project-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+      gap: 2rem;
+      align-items: start;
+      margin-bottom: 4rem;
+    }
+
+    .project-hero h1 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.1;
+      margin: 0 0 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
+
+    .summary-card h2 {
+      font-size: 1.2rem;
+      margin-top: 0;
+    }
+
+    .summary-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .summary-list li {
+      border-top: 1px solid var(--border);
+      padding: 0.75rem 0;
+    }
+
+    .summary-list li:first-child {
+      border-top: none;
+    }
+
+    .summary-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.15rem;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid var(--accent);
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .button.secondary {
+      color: var(--accent);
+      background: transparent;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      background: #eef2ff;
+      color: #253b80;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+    }
+
+    .feature-image {
+      width: 100%;
+      max-height: 480px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #e8ecf3;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    figure {
+      margin: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
+
+    figure img,
+    figure video,
+    figure iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: #e8ecf3;
+      border: none;
+    }
+
+    figcaption {
+      padding: 0.9rem 1rem 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .results-list {
+      padding-left: 1.2rem;
+    }
+
+    .results-list li {
+      margin-bottom: 0.6rem;
+    }
+
+    .callout {
+      background: #eef2ff;
+      border: 1px solid #cdd8ff;
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    @media (max-width: 760px) {
+      .project-hero {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav a {
+        margin-left: 0;
+        margin-right: 1rem;
+      }
+
+      main {
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <strong>Alec Plehn</strong>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="#overview">Overview</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#results">Results</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="index.html">← Back to portfolio</a>
+    </div>
+
+    <section class="project-hero">
+      <div>
+        <h1>Engineering Calculator</h1>
+        <p class="subtitle">
+          Formulas and approaches for solving engineering problems such as preliminary 
+          stress estimates, stress concentrations, and fatique analyses can have a plethora
+          of associated equations which operate under separate assumptions at separate points
+          in the problem solving process. Having a programmed framework for quickly and reliably
+          performing hand calcluatons can be a major time saver during real world projects. This
+          calculator uses a series of functions separated into files by subject. A homework
+          problem or preliminary calculation can be performed by passing relevant inputs into these
+          functions within a problem file step by step. This approach has saved me hours on homework
+          assignments and project decison making.
+        </p>
+
+        <div class="tag-list">
+          <span class="tag">SolidWorks</span>
+          <span class="tag">ANSYS</span>
+          <span class="tag">Python</span>
+          <span class="tag">Optimization</span>
+        </div>
+
+        <div class="button-row">
+          <a class="button primary" href="files/project-report.pdf">View Report</a>
+          <a class="button secondary" href="https://github.com/your-username/project-repo" target="_blank" rel="noopener noreferrer">View GitHub</a>
+        </div>
+      </div>
+
+      <aside class="summary-card">
+        <h2>Project Summary</h2>
+        <ul class="summary-list">
+          <li>
+            <span class="summary-label">Role</span>
+            Mechanical design, analysis, testing, documentation
+          </li>
+          <li>
+            <span class="summary-label">Timeline</span>
+            Spring 2026 / 4 weeks / semester project
+          </li>
+          <li>
+            <span class="summary-label">Team</span>
+            Individual / team of 4
+          </li>
+          <li>
+            <span class="summary-label">Tools</span>
+            SolidWorks, ANSYS, MATLAB, Python
+          </li>
+          <li>
+            <span class="summary-label">Deliverables</span>
+            Prototype, CAD model, analysis report, presentation
+          </li>
+        </ul>
+      </aside>
+    </section>
+
+    <section>
+      <img class="feature-image" src="images/project-hero.jpg" alt="Main project image or CAD render" />
+    </section>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <div class="content-grid">
+        <article class="card">
+          <h3>Problem</h3>
+          <p>
+            Describe the design problem. What needed to be improved, automated,
+            measured, optimized, manufactured, or tested?
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Constraints</h3>
+          <p>
+            List the most important constraints: budget, manufacturability, weight,
+            stiffness, safety factor, schedule, materials, geometry, sensor limits, etc.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Approach</h3>
+          <p>
+            Explain your process: requirements, concept selection, CAD, calculations,
+            simulation, prototype iteration, testing, and final documentation.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Technical Details</h2>
+      <div class="content-grid">
+        <article class="card">
+          <h3>Design Work</h3>
+          <p>
+            Briefly describe the mechanical design, CAD modeling, assemblies,
+            drawings, fixtures, mechanisms, or physical layout decisions.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Analysis Work</h3>
+          <p>
+            Describe calculations, FEA, optimization, controls analysis, statistical
+            checks, uncertainty estimates, or design tradeoffs.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Validation</h3>
+          <p>
+            Explain how you checked whether the design worked: testing, inspection,
+            simulation comparison, measurement, or peer/instructor review.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <h2>Photo and Video Gallery</h2>
+      <p>
+        Replace the example file paths with your own files. Store local images in an
+        <code>images/</code> folder and videos in a <code>videos/</code> folder.
+      </p>
+
+      <div class="gallery-grid">
+        <figure>
+          <img src="images/cad-render.jpg" alt="CAD render of the project" />
+          <figcaption>CAD render showing the overall assembly and major components.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="images/prototype-photo.jpg" alt="Prototype photo" />
+          <figcaption>Physical prototype during assembly or testing.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="images/analysis-result.jpg" alt="Engineering analysis result" />
+          <figcaption>Analysis result, simulation output, plot, or design comparison.</figcaption>
+        </figure>
+
+        <figure>
+          <video controls poster="images/video-thumbnail.jpg">
+            <source src="videos/project-demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>Short local video demo of the project working.</figcaption>
+        </figure>
+
+        <figure>
+          <iframe
+            src="https://www.youtube.com/embed/VIDEO_ID_HERE"
+            title="Project video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+          <figcaption>Embedded YouTube video. Replace <code>VIDEO_ID_HERE</code> with your video ID.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="images/final-result.jpg" alt="Final project result" />
+          <figcaption>Final result, completed build, test setup, or final deliverable.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="results">
+      <h2>Results</h2>
+      <div class="content-grid">
+        <article class="card">
+          <h3>Key Outcomes</h3>
+          <ul class="results-list">
+            <li>Outcome 1: quantify the result if possible.</li>
+            <li>Outcome 2: describe what improved, worked, or was validated.</li>
+            <li>Outcome 3: include performance, manufacturability, cost, or reliability if relevant.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>What I Learned</h3>
+          <p>
+            Summarize the main engineering lessons. Include tradeoffs, mistakes,
+            limitations, and what you would change in a second iteration.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="callout">
+      <h2>How to Read This Project</h2>
+      <p>
+        For a quick review, start with the overview and gallery. For more detail,
+        use the report or GitHub link above. Replace this callout with a short note
+        directing recruiters or collaborators to the most useful artifact.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Alec Plehn. Project page template.</p>
+  </footer>
+</body>
+</html>
